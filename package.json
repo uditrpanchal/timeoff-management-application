@@ -46,7 +46,7 @@
   "devDependencies": {
     "chai": "^2.2.0",
     "mocha": "^6.2.2",
-    "node-sass": "^8.0",
+    "node-sass": "^8.0.0",
     "request-promise": "^4.2.2",
     "selenium-webdriver": "2.53.3"
   },
@@ -59,6 +59,6 @@
     "preinstall": "npx npm-force-resolutions"
   },
   "resolutions": {
-    "graceful-fs": "^18.12.1"
+    "graceful-fs": "^4.2.4"
   }
 }
