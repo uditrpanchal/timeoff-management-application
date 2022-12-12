@@ -9,6 +9,7 @@ build-nodejs-app:
     script:
         - node -v
         - npm -v
+        - npm cache clean --force
         - npm install
     artifacts:
         paths:
