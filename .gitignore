@@ -3,5 +3,6 @@
 *.swo
 *.swn
 *.swm
+package-lock.json
 node_modules/
 *.sqlite
