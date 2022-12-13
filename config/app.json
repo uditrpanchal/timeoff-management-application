@@ -11,10 +11,10 @@
     }
   },
   "sessionStore": {
-    "useRedis": true,
+    "useRedis": false,
     "redisConnectionConfiguration": {
-      "host": "localhost",
-      "port": 6379
+        "host": "tls://gitlab-redis.5tzkjt.ng.0001.use2.cache.amazonaws.com",
+        "port": 6379
     }
   },
   "ga_analytics_on" : false,

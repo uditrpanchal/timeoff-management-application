@@ -3,6 +3,10 @@ stages:
 - app-image-build
 - app-deploy
 
+variables:
+    APP_NAME: "timeoff-management-app"
+    APP_VERSION: $CI_PIPELINE_IID
+
 build-nodejs-app:
     stage: app-build
     image: node:18.12.1
@@ -11,6 +15,8 @@ build-nodejs-app:
         - npm -v
         - npm cache clean --force
         - npm install
+        - echo $CI_PIPELINE_IID
     artifacts:
         paths:
             - node_modules/
+
