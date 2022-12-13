@@ -20,7 +20,10 @@ RUN apk add --no-cache \
     nodejs npm 
 
 COPY package.json  .
-RUN npm install --loglevel verbose
+
+RUN npm install
+#RUN npm install --loglevel verbose
+
 
 FROM alpine:latest
 
