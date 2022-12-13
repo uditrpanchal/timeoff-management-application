@@ -22,9 +22,9 @@ build-nodejs-app:
 
 build-docker-image:
     stage: app-image-build
-    image: docker:20.10.21
+    image: docker:20.10.12
     services:
-        - docker:20.10.21-dind
+        - docker:20.10.12-dind
     script:
         - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
         - docker build -t $CI_REGISTRY/uditrpanchal/timeoff-management -t $CI_REGISTRY/uditrpanchal/timeoff-management:$APP_VERSION .
