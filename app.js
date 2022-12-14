@@ -56,6 +56,7 @@ app.use(function(req,res,next){
 
   if ( req.user && req.user.company ) {
     today = req.user.company.get_today();
+    
   } else {
     today = moment.utc();
   }
