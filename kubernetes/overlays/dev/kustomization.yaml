@@ -1,0 +1,12 @@
+bases:
+  - ../../base
+
+resources:
+- namespace.yaml
+
+namespace: dev-project
+namePrefix: dev-
+commonLabels:
+  env: development
+
+

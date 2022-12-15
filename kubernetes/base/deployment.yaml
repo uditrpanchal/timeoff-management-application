@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeoff-app
+  labels:
+    app: timeoff-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeoff-app
+  template:
+    metadata:
+      labels:
+        app: timeoff-app
+    spec:
+      containers:
+      - name: timeoff-app
+        image: docker.io/uditrpanchal/timeoff-management:latest
+        ports:
+        - containerPort: 3000

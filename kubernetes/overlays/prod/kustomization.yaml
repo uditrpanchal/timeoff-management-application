@@ -1,0 +1,15 @@
+bases:
+  - ../../base
+
+resources:
+- namespace.yaml
+
+namespace: prod-project
+namePrefix: prod-
+commonLabels:
+  env: prod
+
+
+patches:
+  - replicas.yaml
+  - nlb-cert-arn.yaml

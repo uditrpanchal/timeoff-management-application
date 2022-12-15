@@ -6,6 +6,7 @@ stages:
 variables:
     APP_NAME: "timeoff-management-app"
     APP_VERSION: $CI_PIPELINE_IID
+    KUBECTL_VERSION: "v1.22.0"
 
 build-nodejs-app:
     stage: app-build
@@ -22,6 +23,8 @@ build-nodejs-app:
 
 build-docker-image:
     stage: app-image-build
+    only:
+        - master
     image: docker:20.10.12
     services:
         - docker:20.10.12-dind
@@ -31,4 +34,32 @@ build-docker-image:
         - docker image ls
         - docker push --all-tags docker.io/uditrpanchal/timeoff-management
 
+deploy to EKS:
+    stage: app-deploy
+    only:
+        - master
+    image:
+        name: uditrpanchal/aws-helm:test2
+        entrypoint: [""]
+    before_script:
+        - export AWS_PROFILE=${AWS_PROFILE}
+        - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+        - export KUBECONFIG=${KUBECONFIG}
+        - export KUBE_CONFIG_DATA=${KUBECONFIG}
+        - export AWS_PROFILE=${AWS_PROFILE}
+    script: 
+        - pwd
+        - ls -al
+        - aws --version
+        - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+        - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+        - aws configure set region us-east-1
+        - aws sts get-caller-identity
+        - aws eks --region us-east-1 update-kubeconfig --name eks
+        - kubectl get namespaces 
+        - pwd
+        - ls -al
+        - kubectl apply -k kubernetes/overlays/prod
 
