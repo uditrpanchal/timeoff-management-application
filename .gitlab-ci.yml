@@ -54,7 +54,7 @@ deploy to EKS:
             && rm -rf /var/cache/apk/*
 
         # Add EKS cluster
-        aws eks --region us-east-1 update-kubeconfig --name eks
+        aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
 
         pwd
         ls -al
