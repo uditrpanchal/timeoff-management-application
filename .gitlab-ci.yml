@@ -44,7 +44,7 @@ deploy to EKS:
         - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
         - export KUBE_CONFIG_DATA=$KUBECONFIG
         # - export AWS_PROFILE > ~/.aws/credentials
-        - aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
+#      - aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
     script: |
         # install AWS CLI
         apk add --no-cache python3 py3-pip \
