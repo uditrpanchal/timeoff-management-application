@@ -7,29 +7,29 @@ variables:
     APP_NAME: "timeoff-management-app"
     APP_VERSION: $CI_PIPELINE_IID
 
-build-nodejs-app:
-    stage: app-build
-    image: node:18.12.1
-    script:
-        - node -v
-        - npm -v
-        - npm cache clean --force
-        - npm install
-        - echo $CI_PIPELINE_IID
-    artifacts:
-        paths:
-            - node_modules/
+# build-nodejs-app:
+#     stage: app-build
+#     image: node:18.12.1
+#     script:
+#         - node -v
+#         - npm -v
+#         - npm cache clean --force
+#         - npm install
+#         - echo $CI_PIPELINE_IID
+#     artifacts:
+#         paths:
+#             - node_modules/
 
-build-docker-image:
-    stage: app-image-build
-    image: docker:20.10.12
-    services:
-        - docker:20.10.12-dind
-    script:
-        - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
-        - docker build -t docker.io/uditrpanchal/timeoff-management:latest -t docker.io/uditrpanchal/timeoff-management:$APP_VERSION .
-        - docker image ls
-        - docker push --all-tags docker.io/uditrpanchal/timeoff-management
+# build-docker-image:
+#     stage: app-image-build
+#     image: docker:20.10.12
+#     services:
+#         - docker:20.10.12-dind
+#     script:
+#         - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
+#         - docker build -t docker.io/uditrpanchal/timeoff-management:latest -t docker.io/uditrpanchal/timeoff-management:$APP_VERSION .
+#         - docker image ls
+#         - docker push --all-tags docker.io/uditrpanchal/timeoff-management
 
 deploy to EKS:
     stage: app-deploy
