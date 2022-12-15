@@ -57,7 +57,5 @@ deploy to EKS:
         - aws sts get-caller-identity
         - aws eks --region us-east-1 update-kubeconfig --name eks
         - kubectl get namespaces 
-        - pwd
-        - ls -al
         - kubectl apply -k kubernetes/overlays/prod
 
