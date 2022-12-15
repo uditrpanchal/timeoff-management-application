@@ -48,7 +48,6 @@ deploy to EKS:
     script: 
         - pwd
         - ls -al
-        - echo "$AWS_PROFILE" > /.aws/credentials
         - apk add --no-cache python3 py3-pip && pip3 install --upgrade pip  && pip3 install awscli 
         - kubectl get namespaces 
 #        - aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
