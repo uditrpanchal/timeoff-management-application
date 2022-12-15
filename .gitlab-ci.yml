@@ -8,32 +8,36 @@ variables:
     APP_VERSION: $CI_PIPELINE_IID
     KUBECTL_VERSION: "v1.22.0"
 
-# build-nodejs-app:
-#     stage: app-build
-#     image: node:18.12.1
-#     script:
-#         - node -v
-#         - npm -v
-#         - npm cache clean --force
-#         - npm install
-#         - echo $CI_PIPELINE_IID
-#     artifacts:
-#         paths:
-#             - node_modules/
+build-nodejs-app:
+    stage: app-build
+    image: node:18.12.1
+    script:
+        - node -v
+        - npm -v
+        - npm cache clean --force
+        - npm install
+        - echo $CI_PIPELINE_IID
+    artifacts:
+        paths:
+            - node_modules/
 
-# build-docker-image:
-#     stage: app-image-build
-#     image: docker:20.10.12
-#     services:
-#         - docker:20.10.12-dind
-#     script:
-#         - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
-#         - docker build -t docker.io/uditrpanchal/timeoff-management:latest -t docker.io/uditrpanchal/timeoff-management:$APP_VERSION .
-#         - docker image ls
-#         - docker push --all-tags docker.io/uditrpanchal/timeoff-management
+build-docker-image:
+    stage: app-image-build
+    only:
+        - master
+    image: docker:20.10.12
+    services:
+        - docker:20.10.12-dind
+    script:
+        - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
+        - docker build -t docker.io/uditrpanchal/timeoff-management:latest -t docker.io/uditrpanchal/timeoff-management:$APP_VERSION .
+        - docker image ls
+        - docker push --all-tags docker.io/uditrpanchal/timeoff-management
 
 deploy to EKS:
     stage: app-deploy
+    only:
+        - master
     image:
         name: uditrpanchal/aws-helm:test2
         entrypoint: [""]
@@ -45,8 +49,6 @@ deploy to EKS:
         - export KUBECONFIG=${KUBECONFIG}
         - export KUBE_CONFIG_DATA=${KUBECONFIG}
         - export AWS_PROFILE=${AWS_PROFILE}
-        # - export AWS_PROFILE > ~/.aws/credentials
-#      - aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
     script: 
         - pwd
         - ls -al
