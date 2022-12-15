@@ -56,14 +56,8 @@ deploy to EKS:
         - aws configure set region us-east-1
         - aws sts get-caller-identity
         - aws eks --region us-east-1 update-kubeconfig --name eks
-        # - cat $KUBECONFIG
-        # - cat ${KUBECONFIG}
-        # - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        # - chmod +x ./kubectl 
-        # - mv ./kubectl /usr/local/bin/kubectl 
-        # - apk add --no-cache python3 py3-pip && pip3 install --upgrade pip  && pip3 install awscli 
-        # - aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
         - kubectl get namespaces 
         - pwd
         - ls -al
+        - kubectl apply -k kubernetes/overlays/prod
 
