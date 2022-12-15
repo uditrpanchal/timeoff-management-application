@@ -34,7 +34,7 @@ variables:
 deploy to EKS:
     stage: app-deploy
     image:
-        name: bitnami/kubectl:1.25.5
+        name: rancher/kubectl:v1.23.7
 #        name: uditrpanchal/aws-kubectl:2.9.7
     before_script:
         - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
