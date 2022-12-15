@@ -35,7 +35,7 @@ variables:
 deploy to EKS:
     stage: app-deploy
     image:
-        name: alpine/helm
+        name: uditrpanchal/aws-helm:test
         entrypoint: [""]
     before_script:
         - export AWS_PROFILE=${AWS_PROFILE}
