@@ -34,7 +34,7 @@ variables:
 deploy to EKS:
     stage: app-deploy
     image:
-        name: rancher/kubectl:v1.23.7
+        name: bitnami/kubectl:latest
         entrypoint: [""]
 #        name: uditrpanchal/aws-kubectl:2.9.7
     before_script:
