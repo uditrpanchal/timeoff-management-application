@@ -5,4 +5,4 @@ RUN yum -y install tar gzip && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT [""]
