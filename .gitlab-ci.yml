@@ -35,7 +35,7 @@ variables:
 deploy to EKS:
     stage: app-deploy
     image:
-        name: uditrpanchal/aws-helm:test
+        name: axway/eks-tooling
         entrypoint: [""]
     before_script:
         - export AWS_PROFILE=${AWS_PROFILE}
@@ -44,6 +44,7 @@ deploy to EKS:
         - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
         - export KUBECONFIG=${KUBECONFIG}
         - export KUBE_CONFIG_DATA=${KUBECONFIG}
+        - export AWS_PROFILE=${AWS_PROFILE}
         # - export AWS_PROFILE > ~/.aws/credentials
 #      - aws eks --region us-east-1 update-kubeconfig --name eks --profile gitlab
     script: 
