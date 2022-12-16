@@ -6,7 +6,7 @@ stages:
 variables:
     APP_NAME: "timeoff-management-app"
     APP_VERSION: $CI_PIPELINE_IID
-    KUBECTL_VERSION: "v1.22.0"
+
 
 build-nodejs-app:
     stage: app-build
