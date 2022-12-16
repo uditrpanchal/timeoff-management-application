@@ -1,159 +1,174 @@
+# Timeoff Management Application
 
-# TimeOff.Management
+![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/uditrpanchal/timeoff-management-application?branch=master&style=plastic)
 
-Web application for managing employee absences.
+## Table of Contents
+- [Description](#description)
+- [Tasks list](#tasks)
+- [Hostnames](#hostname)
+- [Initial Setup](#initial-setup-step-by-step)
+- [Subnets](#subnets)
+- [Route Tables](#route-tables)
+- [Terraform configs](#terraform-configuration-structure)
+- [Kubernetes configs](#kubernetes-configuration-structure-kustomize-configuration-management)
+- [CI/CD Flow](#cicd-flow)
 
-<a href="https://travis-ci.org/timeoff-management/timeoff-management-application"><img align="right" src="https://travis-ci.org/timeoff-management/timeoff-management-application.svg?branch=master" alt="Build status" /></a>
+### Description
+Welcome aboard fellow engineers. This is where you will find all the application code, scripts and configurations for IaC. This document will include the architecture diagram and details of infrastructure provisioning through Terraform. Gitlab CI/CD was used to setup autonomous build and deployment of application to AWS EKS cluster.
 
-## Features
+### Tasks
+- [x] Architecture Diagram for the solution
+- [x] Infrastructure running in AWS and deploy using IaC
+- [x] Application must be deployed in fully autonomous way (CI/CD)
+- [x] Application needs to be Highly Available and load balanced in atleast 2 AZ
+- [ ] Application should be served using HTTPS and HTTP should be redirected to HTTPS
 
-**Multiple views of staff absences**
+##### Hostname
+- [x] aa79ca04ac3904183b874ae6adfede49-498e336b853077ec.elb.us-east-1.amazonaws.com 
+- [ ] https://timeoff-management.net [ DNS not resolving, Domain registered with Route53, Certificate (ACM) ]
 
-Calendar view, Team view, or Just plain list.
+<br />
 
-**Tune application to fit into your company policy**
+![aws_architecture_diagram](/public/img/AWS_Architecture.drawio.png "aws_architecture_diagram")
 
-Add custom absence types: Sickness, Maternity, Working from home, Birthday etc. Define if each uses vacation allowance.
+<p align="center">
+<b>AWS EKS Cluster Architecture</b>
+</p>
 
-Optionally limit the amount of days employees can take for each Leave type. E.g. no more than 10 Sick days per year.
+<br />
 
-Setup public holidays as well as company specific days off.
+#### Initial Setup (Step-by-step) :
+- Fork https://github.com/timeoff-management/timeoff-management-application to your hosted Git repository (Gitlab, Github, Bitbucket etc.)
+- Resolve application build issues
+- Containerize the timeoff-management application (Dockerfile)
+- Deploy and test the application locally (Docker/Kubernetes). 
+- For best practice, don't use your root user for AWS work. Create group in IAM and add user (eg: gitlab) to the group with programmatic access to perform all tasks.
+- Register the domain and update the A record in hosted DNS zone for hostname redirecting to the application.
+- Setup EKS cluster manually and deploy the container image.
+- Create terraform configuration for each AWS component and services to setup the AWS Infrastructure.
+- Create Kubernetes objects and configuration (Kustomize - configuration management).
+- Create CI/CD pipeline (.gitlab-ci.yml). Store all required environment variables in Gitlab before executing the pipeline.
+- Test out end-to-end flow.
 
-Group employees by departments: bring your organisational structure, set the supervisor for every department.
+<br />
 
-Customisable working schedule for company and individuals.
 
-**Third Party Calendar Integration**
+#### Subnets
 
-Broadcast employee whereabouts into external calendar providers: MS Outlook, Google Calendar, and iCal.
+| Name   | Type     | CIDR Block    |
+| ------------- | ------------- | -------- |
+| public-us-east-1a         | public        | 192.168.0.0/18  |
+| public-us-east-1b           | public         | 192.168.64.0/18  |
+| private-us-east-1a         | private        | 192.168.128.0/18  |
+| private-us-east-1b           | private         | 192.168.192.0/18  |
 
-Create calendar feeds for individuals, departments or entire company.
+<br />
 
-**Three Steps Workflow**
+#### Route Tables
 
-Employee requests time off or revokes existing one.
+##### public ( 2 subnets )
+- public-us-east-1b [192.168.64.0/18]
+- public-us-east-1a [192.168.0.0/18]
 
-Supervisor gets email notification and decides about upcoming employee absence.
+##### private1
+- private-us-east-1a [192.168.128.0/18]
 
-Absence is accounted. Peers are informed via team view or calendar feeds.
 
-**Access control**
+##### private2
+- private-us-east-1b [192.168.192.0/18]
 
-There are following types of users: employees, supervisors, and administrators.
+<br />
 
-Optional LDAP authentication: configure application to use your LDAP server for user authentication.
+#### Terraform (Provisioning AWS Cluster)
 
-**Ability to extract leave data into CSV**
+##### Terraform configuration structure
+Each terraform file contains the link to the resource and comments for block
 
-Ability to back up entire company leave data into CSV file. So it could be used in any spreadsheet applications.
-
-**Works on mobile phones**
-
-The most used customer paths are mobile friendly:
-
-* employee is able to request new leave from mobile device
-
-* supervisor is able to record decision from the mobile as well.
-
-**Lots of other little things that would make life easier**
-
-Manually adjust employee allowances
-e.g. employee has extra day in lieu.
-
-Upon creation employee receives pro-rated vacation allowance, depending on start date.
-
-Email notification to all involved parties.
-
-Optionally allow employees to see the time off information of entire company regardless of department structure.
-
-## Screenshots
-
-![TimeOff.Management Screenshot](https://raw.githubusercontent.com/timeoff-management/application/master/public/img/readme_screenshot.png)
-
-## Installation
-
-### Cloud hosting
-
-Visit http://timeoff.management/
-
-Create company account and use cloud based version.
-
-### Self hosting
-
-Install TimeOff.Management application within your infrastructure:
-
-(make sure you have Node.js (>=4.0.0) and SQLite installed)
-
-```bash
-git clone https://github.com/timeoff-management/application.git timeoff-management
-cd timeoff-management
-npm install
-npm start
-```
-Open http://localhost:3000/ in your browser.
-
-## Run tests
-
-We have quite a wide test coverage, to make sure that the main user paths work as expected.
-
-Please run them frequently while developing the project.
-
-Make sure you have Chrome driver installed in your path and Chrome browser for your platform.
-
-If you want to see the browser execute the interactions prefix with `SHOW_CHROME=1`
 
 ```bash
-USE_CHROME=1 npm test
+terraform/
+ ├── provider.tf
+ ├── vpc.tf
+ ├── internet-gateway.tf
+ ├── subnets.tf
+ ├── nat-gateways.tf
+ ├── routing-tables.tf
+ ├── route-table-association.tf
+ ├── eips.tf
+ ├── eks.tf
+ ├── eks-node-groups.tf
+ └── terraform.tfstate
+
 ```
-
-(make sure that application with default settings is up and running)
-
-Any bug fixes or enhancements should have good test coverage to get them into "master" branch.
-
-## Updating existing instance with new code
-
-In case one needs to patch existing instance of TimeOff.Managenent application with new version:
+<br />
 
 ```bash
-git fetch
-git pull origin master
-npm install
-npm run-script db-update
-npm start
+# Steps to provision AWS EKS Cluster
+
+$ terraform init          # Downloads and install plugins for required providers
+$ terraform plan          # Previews the changes (like a Dry-run)
+$ terraform apply         # Applies the changes [ --auto-approve (to execute without user prompt for 'yes' confirmation)]
+
+
+# Step to destroy AWS EKS Cluster
+
+$ terraform destroy       # Terminates resources managed by terraform project
+
 ```
 
-## How to?
+##### Kubernetes configuration structure [Kustomize Configuration Management]
 
-There are some customizations available.
+```bash
+kubernetes/
+├── base
+│   ├── deployment.yaml
+│   ├── external-nlb-service.yaml
+│   ├── internal-nlb-service.yaml
+│   └── kustomization.yaml
+└── overlays
+    ├── dev
+    │   ├── kustomization.yaml
+    │   └── namespace.yaml
+    └── prod
+        ├── kustomization.yaml
+        ├── namespace.yaml
+        ├── nlb-cert-arn.yaml
+        └── replicas.yaml
 
-## How to amend or extend colours available for colour picker?
-Follow instructions on [this page](docs/extend_colors_for_leave_type.md).
+```
+<br />
 
-## Customization
+```bash
+# Steps to setup the project
 
-There are few options to configure an installation.
+# This command creates prod-project namespace and deploys /base components with applied overlays for (prod) environment
 
-### Make sorting sensitive to particular locale
+kubectl apply -k /overlays/dev 
+kubectl apply -k /overlays/prod  (Triggers .gitlab-ci.yml [last-step] after the merge from develop to master branch)        
+```
+<br />
 
-Given the software could be installed for company with employees with non-English names there might be a need to
-respect the alphabet while sorting customer entered content.
+#### CI/CD Flow
 
-For that purpose the application config file has `locale_code_for_sorting` entry.
-By default the value is `en` (English). One can override it with other locales such as `cs`, `fr`, `de` etc.
+![git_flow_diagram](/public/img/git_flow_drawio.png "gitflow_diagram")
+<p align="center">
+<b>CI/CD Flow</b>
+</p>
 
-### Force employees to pick type each time new leave is booked
+#### Challenges faced
+- Application Build :
+    - As application was old. Build was failing initially, Updated Node.js and node-sass library version.
+    - Due to old libraries, issue arised with package-lock.json. Removed the file and application build was successful.
+- AWS Infrastructure :
+    - Transitioning from creating EKS cluster manually to automatic provisioning through Terraform took enormous time due steep learning curve and understanding each AWS component and services.
+    - Performed domain registration with Route53 and requested certificate through ACM (AWS Certificate Manager). Created Route53 hosted DNS Zone. Assigned A record for domain **timeoff-management.net**. Updated NS (DNS Name servers) as well after checking using DNS tools Whois lookup, nslookup, dig etc. Currently, **timeoff-management.net** not being resolved. Based on search, it might take 2-3 days to update the DNS.
+- CI/CD Pipeline :
+    - Last stage of pipeline almost took the whole day to resolve the issue of logging into EKS cluster. Due to lack of clear documentation on locating AWS profile inside the build-agent container. Logging to EKS cluster was not successful. Eventually, aws configure set command helped to set access-key, secret and KUBECONFIG to access the EKS cluster. Before that, applying those values through environment variable was not working. 
 
-Some organizations require employees to explicitly pick the type of leave when booking time off. So employee makes a choice rather than relying on default settings.
-That reduce number of "mistaken" leaves, which are cancelled after.
+<br />
 
-In order to force employee to explicitly pick the leave type of the booked time off, change `is_force_to_explicitly_select_type_when_requesting_new_leave`
-flag to be `true` in the `config/app.json` file.
-
-## Use Redis as a sessions storage
-
-Follow instructions on [this page](docs/SessionStoreInRedis.md).
-
-## Feedback
-
-Please report any issues or feedback to <a href="https://twitter.com/FreeTimeOffApp">twitter</a> or Email: pavlo at timeoff.management
-
+#### Future Improvements
+- To solve DNS resolution issue.
+- Use self-signed certificate using cert-manager controller in kubernetes cluster.
+- Terraform state management through AWS S3 Bucket or Gitlab-managed Terraform state
+- Deep dive and study AWS components, services and network extensively.
