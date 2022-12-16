@@ -24,8 +24,8 @@ Welcome aboard fellow engineers. This is where you will find all the application
 - [ ] Application should be served using HTTPS and HTTP should be redirected to HTTPS
 
 ##### Hostname
-- [x] http://aa79ca04ac3904183b874ae6adfede49-498e336b853077ec.elb.us-east-1.amazonaws.com 
-- [ ] https://timeoff-management.net [ DNS not resolving, Domain registered with Route53, Certificate (ACM) ]
+- [x] **http://aa79ca04ac3904183b874ae6adfede49-498e336b853077ec.elb.us-east-1.amazonaws.com** **[Working url]** 
+- [ ] **https://timeoff-management.net** [ DNS not resolving, Domain registered with Route53, Certificate (ACM) ]
 
 <br />
 
