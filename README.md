@@ -24,7 +24,7 @@ Welcome aboard fellow engineers. This is where you will find all the application
 - [ ] Application should be served using HTTPS and HTTP should be redirected to HTTPS
 
 ##### Hostname
-- [x] **http://aa79ca04ac3904183b874ae6adfede49-498e336b853077ec.elb.us-east-1.amazonaws.com** **[Working url]** 
+- [x] **http://a3fa82b701cf7462dbaf4d21558be1c9-bc8f00ac96a727e2.elb.us-east-1.amazonaws.com/** **[Working url]** 
 - [ ] **https://timeoff-management.net** [ DNS not resolving, Domain registered with Route53, Certificate (ACM) ]
 
 <br />
@@ -96,8 +96,8 @@ terraform/
  ├── route-table-association.tf
  ├── eips.tf
  ├── eks.tf
- ├── eks-node-groups.tf
- └── terraform.tfstate
+ └── eks-node-groups.tf
+ 
 
 ```
 <br />
@@ -143,8 +143,8 @@ kubernetes/
 
 # This command creates prod-project namespace and deploys /base components with applied overlays for (prod) environment
 
-kubectl apply -k /overlays/dev 
-kubectl apply -k /overlays/prod  (Triggers .gitlab-ci.yml [last-step] after the merge from develop to master branch)        
+kubectl apply -k kubernetes/overlays/dev 
+kubectl apply -k kubernetes/overlays/prod  (Triggers .gitlab-ci.yml [last-step] after the merge from develop to master branch)        
 ```
 <br />
 
@@ -160,7 +160,7 @@ kubectl apply -k /overlays/prod  (Triggers .gitlab-ci.yml [last-step] after the 
     - As application was old. Build was failing initially, Updated Node.js and node-sass library version.
     - Due to old libraries, issue arised with package-lock.json. Removed the file and application build was successful.
 - AWS Infrastructure :
-    - Transitioning from creating EKS cluster manually to automatic provisioning through Terraform took enormous time due steep learning curve and understanding each AWS component and services.
+    - Transitioning from creating EKS cluster manually to automatic provisioning through Terraform took enormous time due to steep learning curve and understanding each AWS component and services.
     - Performed domain registration with Route53 and requested certificate through ACM (AWS Certificate Manager). Created Route53 hosted DNS Zone. Assigned A record for domain **timeoff-management.net**. Updated NS (DNS Name servers) as well after checking using DNS tools Whois lookup, nslookup, dig etc. Currently, **timeoff-management.net** not being resolved. Based on search, it might take 2-3 days to update the DNS.
 - CI/CD Pipeline :
     - Last stage of pipeline almost took the whole day to resolve the issue of logging into EKS cluster. Due to lack of clear documentation on locating AWS profile inside the build-agent container. Logging to EKS cluster was not successful. Eventually, aws configure set command helped to set access-key, secret and KUBECONFIG to access the EKS cluster. Before that, applying those values through environment variable was not working. 
