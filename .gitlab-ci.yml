@@ -17,9 +17,9 @@ build-nodejs-app:
         - npm cache clean --force
         - npm install
         - echo $CI_PIPELINE_IID
-    artifacts:
-        paths:
-            - node_modules/
+    # artifacts:
+    #     paths:
+    #         - node_modules/
 
 build-docker-image:
     stage: app-image-build
